@@ -166,7 +166,7 @@
 
   <script>
     // ★★★ ここにさっきのGASのURLを貼る！ ★★★
-    const GAS_URL = "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbxAE29wWSQlFvIaLrBmlzMPr5ye3snv-mYiZDQrCASm74Kw3Fex6p_W3pO4ONJzeTRCVg/exec/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwrmlljQb2e11e78daf-q-4408o3Bi0SswiOax-enOg9lJjfrVyS2jpG2QT_sTQFUg1EA/exec";
 
     const listEl = document.getElementById('doc-list');
     const statusText = document.getElementById('status-text');
@@ -205,3 +205,36 @@
                 <span class="material-symbols-outlined doc-icon">article</span>
                 <span class="doc-title">${file.name}</span>
                 <span class="material-symbols-outlined" style="color: #44474E;">more_vert</span>
+                            `;
+            listEl.appendChild(card);
+          });
+        } else {
+          listEl.innerHTML = `<p style="color:red;">エラー: ${data.error}</p>`;
+        }
+      } catch (e) {
+        listEl.innerHTML = `<p style="color:red;">通信エラー: ${e.message}</p>`;
+      }
+    }
+
+    // ② 新規作成ボタン（右下FAB）を押した時の機能
+    async function createDoc() {
+      alert("新規作成リクエストを送信中...");
+      try {
+        const response = await fetch(GAS_URL + "?action=create");
+        const data = await response.json();
+        
+        if(data.success) {
+          alert("作成成功！");
+          window.open(data.url, '_blank');
+          listDocs(); 
+        } else {
+          alert("エラー: " + data.error);
+        }
+      } catch (e) {
+        alert("通信エラー: " + e.message);
+      }
+    }
+  </script>
+</body>
+</html>
+
