@@ -10,231 +10,99 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   
   <style>
-    /* M3の基本カラースキームと背景 */
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #F3F4F9; /* M3のSurfaceカラー（薄いブルーグレー） */
-      margin: 0;
-      padding: 0;
-      color: #1a1c1e;
-    }
-
-    /* 上部の検索バーエリア */
-    header {
-      padding: 16px 24px;
-      display: flex;
-      justify-content: center;
-    }
-    .search-bar {
-      display: flex;
-      align-items: center;
-      background-color: #E0E2EC; /* M3のSurface Container Highest */
-      border-radius: 28px; /* M3特有のPill型（完全な角丸） */
-      padding: 12px 24px;
-      width: 100%;
-      max-width: 720px;
-      gap: 12px;
-      transition: background-color 0.2s;
-    }
-    .search-bar:hover {
-      background-color: #DDE0EA;
-    }
-    .search-bar input {
-      border: none;
-      background: transparent;
-      outline: none;
-      font-size: 16px;
-      width: 100%;
-      color: #1a1c1e;
-    }
-    .search-bar input::placeholder {
-      color: #44474E;
-    }
-
-    /* メインコンテンツ（グリッド部分） */
-    main {
-      padding: 24px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .section-title {
-      font-size: 14px;
-      font-weight: 500;
-      color: #44474E;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* M3のカードグリッド */
-    .grid-container {
-      display: grid;
-      /* 画面幅に合わせて自動で列数を調整。iPadなら4〜5列になる */
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 16px;
-    }
-
-    .doc-card {
-      background-color: #FEFBFF;
-      border-radius: 12px; /* M3のカード角丸 */
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      transition: box-shadow 0.2s, transform 0.2s;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      text-decoration: none;
-      color: inherit;
-    }
-    .doc-card:hover {
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-      transform: translateY(-2px);
-    }
+    body { font-family: 'Roboto', sans-serif; background-color: #F3F4F9; margin: 0; padding: 0; color: #1a1c1e; }
+    header { padding: 16px 24px; display: flex; justify-content: center; }
+    .search-bar { display: flex; align-items: center; background-color: #E0E2EC; border-radius: 28px; padding: 12px 24px; width: 100%; max-width: 720px; gap: 12px; }
+    .search-bar input { border: none; background: transparent; outline: none; font-size: 16px; width: 100%; }
+    main { padding: 24px; max-width: 1200px; margin: 0 auto; }
+    .section-title { font-size: 14px; font-weight: 500; color: #44474E; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+    .doc-card { background-color: #FEFBFF; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; display: flex; flex-direction: column; text-decoration: none; color: inherit; overflow: hidden; }
+    .card-thumbnail { height: 140px; background-color: #E0E2EC; display: flex; align-items: center; justify-content: center; }
+    .card-content { padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+    .doc-title { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; }
+    .fab-container { position: fixed; bottom: 32px; right: 32px; }
     
-    /* カードのサムネイル部分（グレーの四角） */
-    .card-thumbnail {
-      height: 140px;
-      background-color: #E0E2EC;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #44474E;
-    }
-    
-    /* カードの下部テキストエリア */
-    .card-content {
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .doc-icon {
-      color: #0b57d0; /* ドキュメントの青色 */
-    }
-    .doc-title {
-      font-size: 14px;
-      font-weight: 500;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      flex-grow: 1;
-    }
-
-    /* 右下のフローティングアクションボタン(FAB) */
-    .fab-container {
-      position: fixed;
-      bottom: 32px;
-      right: 32px;
-    }
-    md-fab {
-      --md-fab-container-color: #D3E3FD; /* M3のプライマリーコンテナ色 */
-      --md-fab-icon-color: #041E49;
-    }
+    /* 追加したUIのスタイル */
+    .side-menu { position: fixed; top: 0; left: -250px; width: 250px; height: 100%; background: #FEFBFF; transition: 0.3s; z-index: 1000; padding: 60px 20px; box-shadow: 2px 0 5px rgba(0,0,0,0.1); }
+    .side-menu.open { left: 0; }
+    .popup { display: none; position: fixed; bottom: 100px; right: 32px; background: white; padding: 16px; border-radius: 20px; flex-direction: column; gap: 10px; z-index: 1001; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
   </style>
 </head>
 <body>
 
+  <nav id="side-menu" class="side-menu">
+    <h3>メニュー</h3>
+    <p onclick="toggleMenu()">閉じる</p>
+  </nav>
+
   <header>
     <div class="search-bar">
-      <span class="material-symbols-outlined">menu</span>
-      <input type="text" placeholder="ドキュメントを検索">
+      <span class="material-symbols-outlined" onclick="toggleMenu()" style="cursor:pointer;">menu</span>
+      <input type="text" placeholder="ドキュメントを検索" oninput="filterDocs(this.value)">
       <span class="material-symbols-outlined">search</span>
       <span class="material-symbols-outlined">account_circle</span>
     </div>
   </header>
 
   <main>
-    <div class="section-title">
-      最近のドキュメント
-      <span class="material-symbols-outlined" style="margin-left: auto; cursor:pointer;">grid_view</span>
-    </div>
-
+    <div class="section-title">最近のドキュメント</div>
     <div class="grid-container" id="doc-list">
-      <div style="grid-column: 1 / -1; text-align: center; color: #44474E; padding: 40px;">
-        <span class="material-symbols-outlined" style="font-size: 48px; animation: spin 2s linear infinite;">sync</span>
-        <p id="status-text">GASからドキュメントを読み込み中...</p>
-      </div>
+      <p id="status-text">読み込み中...</p>
     </div>
   </main>
 
-  <div class="fab-container" onclick="createDoc()">
+  <div id="create-popup" class="popup">
+    <button onclick="createDoc()">新しく作成</button>
+    <button>テンプレートを選択</button>
+    <span class="material-symbols-outlined" onclick="togglePopup()" style="text-align:center; cursor:pointer;">close</span>
+  </div>
+
+  <div class="fab-container" onclick="togglePopup()">
     <md-fab aria-label="新規作成">
       <md-icon slot="icon"><span class="material-symbols-outlined">add</span></md-icon>
     </md-fab>
   </div>
 
   <script>
-    // ★★★ ここにさっきのGASのURLを貼る！ ★★★
     const GAS_URL = "https://script.google.com/macros/s/AKfycbwrmlljQb2e11e78daf-q-4408o3Bi0SswiOax-enOg9lJjfrVyS2jpG2QT_sTQFUg1EA/exec";
-
     const listEl = document.getElementById('doc-list');
-    const statusText = document.getElementById('status-text');
 
-    // ページが開かれたら自動で一覧を取得する
-    window.onload = () => {
-      listDocs();
-    };
+    window.onload = listDocs;
 
-    // ① 一覧を取得してカード状に表示する機能
+    function toggleMenu() { document.getElementById('side-menu').classList.toggle('open'); }
+    function togglePopup() { const p = document.getElementById('create-popup'); p.style.display = (p.style.display === 'flex') ? 'none' : 'flex'; }
+    function filterDocs(val) {
+      document.querySelectorAll('.doc-card').forEach(c => {
+        c.style.display = c.textContent.toLowerCase().includes(val.toLowerCase()) ? 'flex' : 'none';
+      });
+    }
+
     async function listDocs() {
       try {
         const response = await fetch(GAS_URL + "?action=list");
         const data = await response.json();
-        
         if(data.success) {
-          listEl.innerHTML = ""; // くるくるローディングを消す
-          
-          if(data.files.length === 0) {
-            listEl.innerHTML = "<p>ドキュメントがまだありません。</p>";
-            return;
-          }
-
-          // 取ってきたリストを1つずつM3のカードにして追加
+          listEl.innerHTML = "";
           data.files.forEach(file => {
             const card = document.createElement('a');
             card.href = file.url;
-            card.target = "_blank"; // 別タブで開く
+            card.target = "_blank";
             card.className = 'doc-card';
-            
-            card.innerHTML = `
-              <div class="card-thumbnail">
-                <span class="material-symbols-outlined" style="font-size: 48px; opacity: 0.5;">description</span>
-              </div>
-              <div class="card-content">
-                <span class="material-symbols-outlined doc-icon">article</span>
-                <span class="doc-title">${file.name}</span>
-                <span class="material-symbols-outlined" style="color: #44474E;">more_vert</span>
-                            `;
+            card.innerHTML = `<div class="card-thumbnail"><span class="material-symbols-outlined">description</span></div><div class="card-content"><span class="doc-title">${file.name}</span></div>`;
             listEl.appendChild(card);
           });
-        } else {
-          listEl.innerHTML = `<p style="color:red;">エラー: ${data.error}</p>`;
         }
-      } catch (e) {
-        listEl.innerHTML = `<p style="color:red;">通信エラー: ${e.message}</p>`;
-      }
+      } catch (e) { listEl.innerHTML = "エラーが発生しました"; }
     }
 
-    // ② 新規作成ボタン（右下FAB）を押した時の機能
     async function createDoc() {
-      alert("新規作成リクエストを送信中...");
       try {
         const response = await fetch(GAS_URL + "?action=create");
         const data = await response.json();
-        
-        if(data.success) {
-          alert("作成成功！");
-          window.open(data.url, '_blank');
-          listDocs(); 
-        } else {
-          alert("エラー: " + data.error);
-        }
-      } catch (e) {
-        alert("通信エラー: " + e.message);
-      }
+        if(data.success) window.open(data.url, '_blank');
+      } catch (e) { alert("エラー"); }
     }
   </script>
 </body>
 </html>
-
