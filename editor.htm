@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Editor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <style>
+    body { margin: 0; display: flex; flex-direction: column; height: 100vh; background: #F8F9FA; font-family: sans-serif; }
+    /* ツールバー */
+    .toolbar { background: #EDF2FA; padding: 8px; display: flex; gap: 10px; border-bottom: 1px solid #ccc; }
+    .toolbar button { background: none; border: none; cursor: pointer; padding: 8px; border-radius: 4px; }
+    .toolbar button:hover { background: #D3E3FD; }
+    /* エディタ本文 */
+    #editor { flex-grow: 1; padding: 40px; outline: none; background: white; overflow-y: auto; }
+  </style>
+</head>
+<body>
+
+  <div class="toolbar">
+    <button onclick="history.back()"><span class="material-symbols-outlined">arrow_back</span></button>
+    <button onclick="document.execCommand('bold')"><span class="material-symbols-outlined">format_bold</span></button>
+    <button onclick="document.execCommand('italic')"><span class="material-symbols-outlined">format_italic</span></button>
+    <button onclick="saveDoc()"><span class="material-symbols-outlined">save</span></button>
+  </div>
+
+  <div id="editor" contenteditable="true">
+    読み込み中...
+  </div>
+
+  <script>
+    // URLパラメータからIDを取得
+    const params = new URLSearchParams(window.location.search);
+    const docId = params.get('id');
+    const editor = document.getElementById('editor');
+
+    // 初期データ読み込み（GASに getDocContent 関数が必要）
+    async function loadDoc() {
+      const resp = await fetch(`GASのURL?action=get&id=${docId}`);
+      const text = await resp.text();
+      editor.innerText = text;
+    }
+    
+    window.onload = loadDoc;
+
+    function saveDoc() {
+      alert("保存機能を実装予定！");
+    }
+  </script>
+</body>
+</html>
